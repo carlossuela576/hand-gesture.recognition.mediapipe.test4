@@ -12,12 +12,13 @@ import cv2 as cv
 import numpy as np
 import mediapipe as mp
 
+from streamlit_webrtc import webrtc_streamer
 from utils import CvFpsCalc
 from model import KeyPointClassifier
 from model import PointHistoryClassifier
 
 st.title("Sign Language Recognition")
-frame = st.empty()
+# frame = st.empty()
 start_webcam = st.button("Start webcam")
 if start_webcam:
     def get_args():
@@ -546,4 +547,11 @@ if start_webcam:
     if __name__ == '__main__':
         main()
         
-    frame.image(main())
+#     frame.image(main())
+        webrtc_streamer(
+        key="stream",
+        video_processor_factory= main(),
+        rtc_configuration={
+            "iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]
+        }
+        )
